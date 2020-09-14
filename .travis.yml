@@ -1,0 +1,9 @@
+language: go
+go:
+- 1.15
+env:
+  global:
+  - CGO_ENABLED=0
+go_import_path: github.com/adevinta/vulcan-report
+install: _script/bootstrap
+script: _script/cibuild
