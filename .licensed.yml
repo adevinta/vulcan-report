@@ -1,0 +1,10 @@
+source_path: "{.*,**/*}"
+shared_cache: true
+ignored:
+  go:
+    - github.mpi-internal.com/**/*
+allowed:
+  - mit
+  - apache-2.0
+  - bsd-2-clause
+  - bsd-3-clause
