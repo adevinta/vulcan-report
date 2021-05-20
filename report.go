@@ -112,8 +112,9 @@ func (r Report) Validate() error {
 type Vulnerability struct {
 	ID string `json:"id"` // Arbitrary UUID that uniquely identifies the vulnerability in every scan.
 
-	Summary string  `json:"summary"` // Mandatory. Vulnerability title.
-	Score   float32 `json:"score"`   // Vulnerability severity score. According to CVSSv3 base score.
+	Summary  string  `json:"summary"`  // Mandatory. Vulnerability title.
+	Score    float32 `json:"score"`    // Vulnerability severity score. According to CVSSv3 base score.
+	Category string  `json:"category"` // Category describes the vulnerability category for making easier filtering.
 
 	CWEID           uint32           `json:"cwe_id,omitempty"`          // CWE-ID.
 	Description     string           `json:"description,omitempty"`     // Vulnerability description.
