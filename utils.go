@@ -170,7 +170,12 @@ func ValidateVulnerability(v Vulnerability) error {
 	if v.Summary == "" {
 		return errors.New("vulnerability group is missing summary")
 	}
-
+	if v.Category == "" {
+		return errors.New("vulnerability category is missing")
+	}
+	if v.AffectedResource == "" {
+		return errors.New("vulnerability affected resource is missing")
+	}
 	// Validate vulnerabilities.
 	for _, vulnerability := range v.Vulnerabilities {
 		err := vulnerability.Validate()
