@@ -3,7 +3,7 @@ GOBIN=$(GOPATH)/bin
 GOSRC=$(GOPATH)/src
 
 $(GOBIN)/golangci-lint:
-	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(GOBIN) v1.36.0
+	go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.36.0
 
 .PHONY: test
 test:
