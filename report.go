@@ -114,13 +114,14 @@ type Vulnerability struct {
 
 	Summary          string  `json:"summary"`           // Mandatory. Vulnerability title.
 	Score            float32 `json:"score"`             // Vulnerability severity score. According to CVSSv3 base score.
-	Category         string  `json:"category"`          // Category describes the vulnerability category for making easier filtering.
 	AffectedResource string  `json:"affected_resource"` // Indicates the concrete resource affected by the vulnerability.
 
-	CWEID           uint32           `json:"cwe_id,omitempty"`          // CWE-ID.
-	Description     string           `json:"description,omitempty"`     // Vulnerability description.
-	Details         string           `json:"details,omitempty"`         // Vulnerability details generated when running the check against the target
-	ImpactDetails   string           `json:"impact_details,omitempty"`  // Vulnerability impact details.
+	CWEID         uint32   `json:"cwe_id,omitempty"`         // CWE-ID.
+	Description   string   `json:"description,omitempty"`    // Vulnerability description.
+	Details       string   `json:"details,omitempty"`        // Vulnerability details generated when running the check against the target.
+	ImpactDetails string   `json:"impact_details,omitempty"` // Vulnerability impact details.
+	Labels        []string `json:"labels,omitempty"`         // A list of labels (strings) to enrich the vulnerability.
+
 	Recommendations []string         `json:"recommendations,omitempty"` // Vulnerability remediation suggestions.
 	References      []string         `json:"references,omitempty"`      // Reference URLs for more information.
 	Resources       []ResourcesGroup `json:"resources,omitempty"`       // ResourcesGroups found when running the check.
