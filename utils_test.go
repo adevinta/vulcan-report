@@ -10,27 +10,27 @@ func TestVulnerabilityRank(t *testing.T) {
 	}{
 		{
 			name:     "Informational",
-			v:        vulnerabilityWithCategoryAndScore("", 0.0),
+			v:        vulnerabilityWithScore(0.0),
 			wantRank: 0,
 		},
 		{
 			name:     "Low",
-			v:        vulnerabilityWithCategoryAndScore("", 3.9),
+			v:        vulnerabilityWithScore(3.9),
 			wantRank: 1,
 		},
 		{
 			name:     "Medium",
-			v:        vulnerabilityWithCategoryAndScore("", 6.9),
+			v:        vulnerabilityWithScore(6.9),
 			wantRank: 2,
 		},
 		{
 			name:     "High",
-			v:        vulnerabilityWithCategoryAndScore("", 8.9),
+			v:        vulnerabilityWithScore(8.9),
 			wantRank: 3,
 		},
 		{
 			name:     "High",
-			v:        vulnerabilityWithCategoryAndScore("", 10.0),
+			v:        vulnerabilityWithScore(10.0),
 			wantRank: 4,
 		},
 	}

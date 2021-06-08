@@ -37,12 +37,12 @@ func mustConvertStrToDateTime(ts string) time.Time {
 	return t
 }
 
-func vulnerabilityWithCategoryAndScore(category string, score float32) Vulnerability {
+func vulnerabilityWithScore(score float32) Vulnerability {
 	return Vulnerability{
 		Summary:          "mocked vulnerability",
-		Category:         category,
 		AffectedResource: "port-80",
 		Score:            score,
+		Labels:           []string{"docker", "potential"},
 	}
 }
 
@@ -95,7 +95,7 @@ func TestVulnerabilityAggregateScore(t *testing.T) {
 	}{
 		{
 			name:      "SingleVulnerability",
-			v:         vulnerabilityWithCategoryAndScore("ISSUE", 3.9),
+			v:         vulnerabilityWithScore(3.9),
 			wantScore: 3.9,
 		},
 		{
@@ -103,9 +103,9 @@ func TestVulnerabilityAggregateScore(t *testing.T) {
 			v: Vulnerability{
 				Score: 3.9,
 				Vulnerabilities: []Vulnerability{
-					vulnerabilityWithCategoryAndScore("ISSUE", 3.9),
-					vulnerabilityWithCategoryAndScore("ISSUE", 3.9),
-					vulnerabilityWithCategoryAndScore("ISSUE", 3.9),
+					vulnerabilityWithScore(3.9),
+					vulnerabilityWithScore(3.9),
+					vulnerabilityWithScore(3.9),
 				},
 			},
 			wantScore: 3.9,
@@ -115,9 +115,9 @@ func TestVulnerabilityAggregateScore(t *testing.T) {
 			v: Vulnerability{
 				Score: 8.9,
 				Vulnerabilities: []Vulnerability{
-					vulnerabilityWithCategoryAndScore("ISSUE", 3.9),
-					vulnerabilityWithCategoryAndScore("ISSUE", 6.9),
-					vulnerabilityWithCategoryAndScore("POTENTIAL_ISSUE", 8.9),
+					vulnerabilityWithScore(3.9),
+					vulnerabilityWithScore(6.9),
+					vulnerabilityWithScore(8.9),
 				},
 			},
 			wantScore: 8.9,
@@ -143,28 +143,28 @@ func TestAddVulnerabilitiesToVulnerability(t *testing.T) {
 	}{
 		{
 			name:                   "NoSubvulnerabilites",
-			v:                      vulnerabilityWithCategoryAndScore("COMPLIANCE", 3.9),
+			v:                      vulnerabilityWithScore(3.9),
 			vToAdd:                 []Vulnerability{},
 			wantSubVulnerabilities: nil,
 		},
 		{
 			name:                   "AddOneVulnerabilityToVulnerability",
-			v:                      vulnerabilityWithCategoryAndScore("ISSUE", 6.9),
-			vToAdd:                 []Vulnerability{vulnerabilityWithCategoryAndScore("ISSUE", 4.0)},
-			wantSubVulnerabilities: []Vulnerability{vulnerabilityWithCategoryAndScore("ISSUE", 4.0)},
+			v:                      vulnerabilityWithScore(6.9),
+			vToAdd:                 []Vulnerability{vulnerabilityWithScore(4.0)},
+			wantSubVulnerabilities: []Vulnerability{vulnerabilityWithScore(4.0)},
 		},
 		{
 			name: "AddMultpileVulnerabilityToVulnerability",
-			v:    vulnerabilityWithCategoryAndScore("POTENTIAL_ISSUE", 8.9),
+			v:    vulnerabilityWithScore(8.9),
 			vToAdd: []Vulnerability{
-				vulnerabilityWithCategoryAndScore("INFORMATIONAL", 0.0),
-				vulnerabilityWithCategoryAndScore("ISSUE", 3.9),
-				vulnerabilityWithCategoryAndScore("ISSUE", 8.9),
+				vulnerabilityWithScore(0.0),
+				vulnerabilityWithScore(3.9),
+				vulnerabilityWithScore(8.9),
 			},
 			wantSubVulnerabilities: []Vulnerability{
-				vulnerabilityWithCategoryAndScore("INFORMATIONAL", 0.0),
-				vulnerabilityWithCategoryAndScore("ISSUE", 3.9),
-				vulnerabilityWithCategoryAndScore("ISSUE", 8.9),
+				vulnerabilityWithScore(0.0),
+				vulnerabilityWithScore(3.9),
+				vulnerabilityWithScore(8.9),
 			},
 		},
 	}
@@ -188,7 +188,7 @@ func TestValidateVulnerability(t *testing.T) {
 	}{
 		{
 			name:    "HappyPath",
-			v:       vulnerabilityWithCategoryAndScore("ISSUE", 8.9),
+			v:       vulnerabilityWithScore(8.9),
 			wantErr: false,
 		},
 		{
@@ -197,9 +197,8 @@ func TestValidateVulnerability(t *testing.T) {
 				Summary:          "vulnerability with subvulns",
 				AffectedResource: "port-80",
 				Score:            8.9,
-				Category:         "POTENTIAL_ISSUE",
 				Vulnerabilities: []Vulnerability{
-					vulnerabilityWithCategoryAndScore("POTENTIAL_ISSUE", 6.9),
+					vulnerabilityWithScore(6.9),
 				},
 			},
 			wantErr: false,
@@ -208,9 +207,7 @@ func TestValidateVulnerability(t *testing.T) {
 			name: "MissingSummary",
 			v: Vulnerability{
 				AffectedResource: "port-80",
-
-				Category: "INFORMATIONAL",
-				Score:    0.0,
+				Score:            0.0,
 			},
 			wantErr:   true,
 			errString: "vulnerability group is missing summary",
@@ -228,9 +225,8 @@ func TestValidateVulnerability(t *testing.T) {
 		{
 			name: "MissingAffectedResource",
 			v: Vulnerability{
-				Summary:  "mocked vulnerability",
-				Category: "INFORMATIONAL",
-				Score:    0.0,
+				Summary: "mocked vulnerability",
+				Score:   0.0,
 			},
 			wantErr:   true,
 			errString: "vulnerability affected resource is missing",
@@ -241,10 +237,8 @@ func TestValidateVulnerability(t *testing.T) {
 				Summary:          "mocked vulnerability with subvulns",
 				AffectedResource: "port-80",
 				Score:            8.9,
-				Category:         "POTENTIAL_ISSUE",
 				Vulnerabilities: []Vulnerability{
 					{
-						Category:         "INFORMATIONAL",
 						AffectedResource: "port-80",
 						Score:            0.0,
 					},
@@ -259,18 +253,15 @@ func TestValidateVulnerability(t *testing.T) {
 				Summary:          "mocked vulnerability with subvulns",
 				AffectedResource: "port-80",
 				Score:            8.9,
-				Category:         "POTENTIAL_ISSUE",
 				Vulnerabilities: []Vulnerability{
 					{
 						Summary:          "mocked subvuln level 1",
 						AffectedResource: "port-80",
 						Score:            6.9,
-						Category:         "POTENTIAL_ISSUE",
 						Vulnerabilities: []Vulnerability{
 							{
 								Summary:          "mocked subvuln level 2",
 								AffectedResource: "port-80",
-								Category:         "INFORMATIONAL",
 								Score:            0.0,
 							},
 						},
@@ -316,7 +307,7 @@ func TestValidateReport(t *testing.T) {
 			r: Report{
 				CheckData: cd0,
 				ResultData: ResultData{
-					Vulnerabilities: []Vulnerability{vulnerabilityWithCategoryAndScore("ISSUE", 3.9)},
+					Vulnerabilities: []Vulnerability{vulnerabilityWithScore(3.9)},
 				},
 			},
 			wantErr: false,
@@ -328,7 +319,6 @@ func TestValidateReport(t *testing.T) {
 				ResultData: ResultData{
 					Vulnerabilities: []Vulnerability{
 						{
-							Category:         "INFORMATIONAL",
 							AffectedResource: "port-80",
 							Score:            0.0,
 						},
