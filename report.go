@@ -112,10 +112,11 @@ func (r Report) Validate() error {
 type Vulnerability struct {
 	ID string `json:"id"` // Arbitrary UUID that uniquely identifies the vulnerability in every scan.
 
-	Summary          string  `json:"summary"`           // Mandatory. Vulnerability title.
-	Score            float32 `json:"score"`             // Vulnerability severity score. According to CVSSv3 base score.
-	AffectedResource string  `json:"affected_resource"` // Indicates the concrete resource affected by the vulnerability.
-	Fingerprint      string  `json:"fingerprint"`       // Fingerprint defines the context in where the vulnerability has been found.
+	Summary                string  `json:"summary"`                  // Mandatory. Vulnerability title.
+	Score                  float32 `json:"score"`                    // Vulnerability severity score. According to CVSSv3 base score.
+	AffectedResource       string  `json:"affected_resource"`        // Indicates the concrete resource affected by the vulnerability.
+	AffectedResourceString string  `json:"affected_resource_string"` // Optionally indicates a human-readable meaningful version of the AffectedResource.
+	Fingerprint            string  `json:"fingerprint"`              // Fingerprint defines the context in where the vulnerability has been found.
 
 	CWEID         uint32   `json:"cwe_id,omitempty"`         // CWE-ID.
 	Description   string   `json:"description,omitempty"`    // Vulnerability description.

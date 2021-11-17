@@ -194,9 +194,10 @@ func TestValidateVulnerability(t *testing.T) {
 		{
 			name: "HappyPathWithSubvulnerabilities",
 			v: Vulnerability{
-				Summary:          "vulnerability with subvulns",
-				AffectedResource: "port-80",
-				Score:            8.9,
+				Summary:                "vulnerability with subvulns",
+				AffectedResource:       "1234567",
+				AffectedResourceString: "port-80",
+				Score:                  8.9,
 				Vulnerabilities: []Vulnerability{
 					vulnerabilityWithScore(6.9),
 				},
