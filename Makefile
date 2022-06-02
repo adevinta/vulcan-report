@@ -3,7 +3,7 @@ GOBIN=$(GOPATH)/bin
 GOSRC=$(GOPATH)/src
 
 $(GOBIN)/golangci-lint:
-	go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.36.0
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.46.0
 
 .PHONY: test
 test:
