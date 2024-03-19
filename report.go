@@ -167,6 +167,7 @@ type Attachment struct {
 // Name: Network Resource
 // Header: | Hostname | Port | Protocol | Service |
 // Rows:
+//
 //	| www.adevinta.com | 80  | tcp | http |
 //	| www.adevinta.com | 443 | tcp | http |
 //
